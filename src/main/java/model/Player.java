@@ -16,8 +16,6 @@ public class Player extends BaseEntity implements IValidatable<Player> {
         validateOrThrow(this);
     }
 
-
-
     @Override
     public boolean isValid(Player player) {
         return player != null &&
@@ -34,6 +32,11 @@ public class Player extends BaseEntity implements IValidatable<Player> {
     public int getRank() { return rank; }
     public int getTeamId() { return teamId; }
 
+    public void setId(int id) { this.id = id; }
+    public void setNickname(String nickname) { this.nickname = nickname; }
+    public void setAge(int age) { this.age = age; }
+    public void setRank(int rank) { this.rank = rank; }
+    public void setTeamId(int teamId) { this.teamId = teamId; }
 
     @Override
     public String getEntityType() {

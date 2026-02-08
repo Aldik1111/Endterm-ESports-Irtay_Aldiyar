@@ -1,47 +1,73 @@
-    package service;
+package service;
 
-    import model.Player;
-    import repository.PlayerRepository;
-    import exception.ValidationException;
+import dto.player.PlayerRequestDto;
+import dto.player.PlayerResponseDto;
+import model.Player;
+import org.springframework.stereotype.Service;
 
-    import java.util.List;
-    import java.util.Optional;
+import java.util.*;
 
-    public class PlayerService {
+@Service
+public class PlayerService {
 
-        private final PlayerRepository playerRepository = new PlayerRepository();
+    private final List<Player> players = new ArrayList<>();
+    private int idCounter = 1;
 
-        public void createPlayer(Player player) {
-            validatePlayer(player);
-            playerRepository.save(player);
-        }
+    // CREATE
+    public void create(PlayerRequestDto dto) {
+        Player player = new Player(
+            idCounter++,
+            dto.getNickname(),
+            dto.getAge(),
+                dto.getRank,
+                dto.getTeamId
+        );
 
-        public Optional<Player> getPlayerById(int id) {
-            return playerRepository.findById(id);
-        }
+        players.add(player);
 
-        public List<Player> getAllPlayers() {
-            return playerRepository.findAll();
-        }
-
-        public void updatePlayer(Player player) {
-            validatePlayer(player);
-            playerRepository.save(player);
-        }
-
-        public void deletePlayer(int id) {
-            playerRepository.deleteById(id);
-        }
-
-        public List<Player> getByTeam(int teamId) {
-            return playerRepository.findByTeamId(teamId);
-        }
-        private void validatePlayer(Player player) {
-            if (player.getName() == null || player.getName().isEmpty()) {
-                throw new ValidationException("Player nickname cannot be empty");
-            }
-            if (player.getAge() <= 0) {
-                throw new ValidationException("Player age must be positive");
-            }
-        }
+        player.setId(idCounter++);
+        player.setNickname(dto.getNickname());
+        player.setAge(dto.getAge());
+        players.add(player);
     }
+
+    // READ ALL
+    public List<PlayerResponseDto> getAll() {
+        return players.stream()
+                .map(this::toResponseDto)
+                .toList();
+    }
+
+    // READ BY ID
+    public Optional<PlayerResponseDto> getById(int id) {
+        return players.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .map(this::toResponseDto);
+    }
+
+    // UPDATE
+    public boolean update(int id, PlayerRequestDto dto) {
+        for (Player player : players) {
+            if (player.getId() == id) {
+                player.setNickname(dto.getNickname());
+                player.setAge(dto.getAge());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // DELETE
+    public void delete(int id) {
+        players.removeIf(p -> p.getId() == id);
+    }
+
+    private PlayerResponseDto toResponseDto(Player player) {
+        return new PlayerResponseDto(
+                player.getId(),
+                player.getName(),
+                player.getAge()
+        );
+    }
+}

@@ -1,6 +1,7 @@
 package controller;
 
-import model.Game;
+import dto.game.GameRequestDto;
+import dto.game.GameResponseDto;
 import service.GameService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -11,33 +12,43 @@ import java.util.List;
 @RequestMapping("/api/games")
 public class GameController {
 
-    private final GameService gameService;
+    private final GameService service;
 
-    public GameController(GameService gameService) {
-        this.gameService = gameService;
+    public GameController(GameService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Game game) {
-        gameService.createGame(game);
+    public ResponseEntity<Void> create(@RequestBody GameRequestDto dto) {
+        service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Game>> getAll() {
-        return ResponseEntity.ok(gameService.getAllGames());
+    public ResponseEntity<List<GameResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Game> getById(@PathVariable int id) {
-        return gameService.getGameById(id)
+    public ResponseEntity<GameResponseDto> getById(@PathVariable int id) {
+        return service.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable int id,
+            @RequestBody GameRequestDto dto
+    ) {
+        return service.update(id, dto)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        gameService.deleteGame(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

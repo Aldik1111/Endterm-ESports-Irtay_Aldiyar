@@ -11,33 +11,41 @@ import java.util.List;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    private final TeamService teamService;
+    private final TeamService service;
 
-    public TeamController(TeamService teamService) {
-        this.teamService = teamService;
+    public TeamController(TeamService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody Team team) {
-        teamService.createTeam(team);
+        service.create(team);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
     public ResponseEntity<List<Team>> getAll() {
-        return ResponseEntity.ok(teamService.getAllTeams());
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Team> getById(@PathVariable int id) {
-        return teamService.getTeamById(id)
+        return service.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable int id,
+                                       @RequestBody Team team) {
+        return service.update(id, team)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        teamService.deleteTeam(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

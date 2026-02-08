@@ -11,33 +11,41 @@ import java.util.List;
 @RequestMapping("/api/tournaments")
 public class TournamentController {
 
-    private final TournamentService tournamentService;
+    private final TournamentService service;
 
-    public TournamentController(TournamentService tournamentService) {
-        this.tournamentService = tournamentService;
+    public TournamentController(TournamentService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody Tournament tournament) {
-        tournamentService.createTournament(tournament);
+        service.create(tournament);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
     public ResponseEntity<List<Tournament>> getAll() {
-        return ResponseEntity.ok(tournamentService.getAllTournaments());
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Tournament> getById(@PathVariable int id) {
-        return tournamentService.getTournamentById(id)
+        return service.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable int id,
+                                       @RequestBody Tournament tournament) {
+        return service.update(id, tournament)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        tournamentService.deleteTournament(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

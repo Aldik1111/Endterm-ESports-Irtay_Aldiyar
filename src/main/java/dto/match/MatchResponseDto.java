@@ -1,6 +1,6 @@
-package model;
+package dto.match;
 
-public class Match extends BaseEntity {
+public class MatchResponseDto {
 
     private int id;
     private int teamAId;
@@ -9,19 +9,14 @@ public class Match extends BaseEntity {
     private int scoreB;
     private int tournamentId;
 
-    public Match(int id, int teamAId, int teamBId, int tournamentId, int scoreA, int scoreB) {
-        super(id, "Match: " + id);
+    public MatchResponseDto(int id, int teamAId, int teamBId,
+                            int scoreA, int scoreB, int tournamentId) {
+        this.id = id;
         this.teamAId = teamAId;
         this.teamBId = teamBId;
-        this.tournamentId = tournamentId;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
-        play();
-    }
-
-    public void play() {
-        this.scoreA = (int) (Math.random() * 10);
-        this.scoreB = (int) (Math.random() * 10);
+        this.tournamentId = tournamentId;
     }
 
     public int getId() {
@@ -46,15 +41,5 @@ public class Match extends BaseEntity {
 
     public int getTournamentId() {
         return tournamentId;
-    }
-
-    @Override
-    public String getInfo() {
-        return "Match: " + id;
-    }
-
-    @Override
-    public String getEntityType() {
-        return "Match";
     }
 }

@@ -1,48 +1,72 @@
 package service;
 
+import dto.game.GameRequestDto;
+import dto.game.GameResponseDto;
+import factory.GameFactory;
 import model.Game;
 import org.springframework.stereotype.Service;
-import repository.GameRepository;
-import exception.ValidationException;
 
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 
 @Service
 public class GameService {
 
-    private final GameRepository gameRepository = new GameRepository();
+    private final List<Game> games = new ArrayList<>();
+    private int idCounter = 1;
 
-    public void createGame(Game game) {
-        validateGame(game);
-        gameRepository.save(game);
+    // CREATE
+    public void create(GameRequestDto dto) {
+        Game game = GameFactory.createGame(
+                idCounter++,
+                dto.getName(),
+                dto.getType()
+        );
+        games.add(game);
     }
 
-    public Optional<Game> getGameById(int id) {
-        return gameRepository.findById(id);
+    // READ ALL
+    public List<GameResponseDto> getAll() {
+        return games.stream()
+                .map(g -> new GameResponseDto(
+                        g.getId(),
+                        g.getName(),
+                        g.getGenre(),
+                        g.getTeamSize()
+                ))
+                .toList();
     }
 
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    // READ BY ID
+    public Optional<GameResponseDto> getById(int id) {
+        return games.stream()
+                .filter(g -> g.getId() == id)
+                .findFirst()
+                .map(g -> new GameResponseDto(
+                        g.getId(),
+                        g.getName(),
+                        g.getGenre(),
+                        g.getTeamSize()
+                ));
     }
 
-    public void updateGame(Game game) {
-        validateGame(game);
-        gameRepository.save(game);
-    }
-
-    public void deleteGame(int id) {
-        gameRepository.deleteById(id);
-    }
-
-    private void validateGame(Game game) {
-        if (game.getName().isEmpty()) {
-            throw new ValidationException("Game name cannot be empty");
+    // UPDATE
+    public boolean update(int id, GameRequestDto dto) {
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).getId() == id) {
+                Game updated = GameFactory.createGame(
+                        id,
+                        dto.getName(),
+                        dto.getType()
+                );
+                games.set(i, updated);
+                return true;
+            }
         }
-        if (!game.getGenre().equalsIgnoreCase("MOBA") &&
-                !game.getGenre().equalsIgnoreCase("FPS")) {
-            throw new ValidationException("Game genre must be MOBA or FPS");
-        }
+        return false;
+    }
+
+    // DELETE
+    public void delete(int id) {
+        games.removeIf(g -> g.getId() == id);
     }
 }

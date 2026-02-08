@@ -30,9 +30,9 @@ public class MatchRepository extends JdbcCrudRepository<Match> {
 
         return new Match(
                 rs.getInt("id"),
-                team1,
-                team2,
-                tournament,
+                rs.getInt("team1_id"),
+                rs.getInt("team2_id"),
+                rs.getInt("tournament_id"),
                 rs.getInt("score1"),
                 rs.getInt("score2")
         );
@@ -41,17 +41,21 @@ public class MatchRepository extends JdbcCrudRepository<Match> {
     @Override
     protected void setInsertParams(PreparedStatement ps, Match entity) throws SQLException {
         ps.setInt(1, entity.getId());
-        ps.setInt(2, entity.getTeam1Id());
-        ps.setInt(3, entity.getTeam2Id());
+        ps.setInt(2, entity.getTeamAId());
+        ps.setInt(3, entity.getTeamBId());
         ps.setInt(4, entity.getTournamentId());
+        ps.setInt(5, entity.getScoreA());
+        ps.setInt(6, entity.getScoreB());
     }
 
     @Override
     protected void setUpdateParams(PreparedStatement ps, Match entity) throws SQLException {
-        ps.setInt(1, entity.getTeam1Id());
-        ps.setInt(2, entity.getTeam2Id());
+        ps.setInt(1, entity.getTeamAId());
+        ps.setInt(2, entity.getTeamBId());
         ps.setInt(3, entity.getTournamentId());
         ps.setInt(4, entity.getId());
+        ps.setInt(5, entity.getScoreA());
+        ps.setInt(6, entity.getScoreB());
     }
 
     @Override

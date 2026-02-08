@@ -21,7 +21,9 @@ public class TournamentRepository extends JdbcCrudRepository<Tournament> {
     @Override
     protected Tournament mapRowToEntity(ResultSet rs) throws SQLException {
         Game game = gameRepo.findById(rs.getInt("game_id")).orElse(null);
-        return new Tournament(rs.getInt("id"), rs.getString("name"), game);
+        return new Tournament(rs.getInt("id"),
+                rs.getString("name"), game,
+                rs.getInt("game_id"));
     }
 
     @Override

@@ -1,41 +1,42 @@
 package service;
 
 import model.Team;
-import repository.TeamRepository;
-import exception.ValidationException;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+@Service
 public class TeamService {
 
-    private final TeamRepository teamRepository = new TeamRepository();
+    private final List<Team> teams = new ArrayList<>();
+    private int idCounter = 1;
 
-    public void createTeam(Team team) {
-        validateTeam(team);
-        teamRepository.save(team);
+    public void create(Team team) {
+        team.setId(idCounter++);
+        teams.add(team);
     }
 
-    public Optional<Team> getTeamById(int id) {
-        return teamRepository.findById(id);
+    public List<Team> getAll() {
+        return teams;
     }
 
-    public List<Team> getAllTeams() {
-        return teamRepository.findAll();
+    public Optional<Team> getById(int id) {
+        return teams.stream()
+                .filter(t -> t.getId() == id)
+                .findFirst();
     }
 
-    public void updateTeam(Team team) {
-        validateTeam(team);
-        teamRepository.update(team);
-    }
-
-    public void deleteTeam(int id) {
-        teamRepository.deleteById(id);
-    }
-
-    private void validateTeam(Team team) {
-        if (team.getName().isEmpty()) {
-            throw new ValidationException("Team name cannot be empty");
+    public boolean update(int id, Team updated) {
+        for (Team team : teams) {
+            if (team.getId() == id) {
+                team.setName(updated.getName());
+                return true;
+            }
         }
+        return false;
+    }
+
+    public void delete(int id) {
+        teams.removeIf(t -> t.getId() == id);
     }
 }

@@ -10,6 +10,8 @@ public abstract class Game extends BaseEntity {
     public abstract int getTeamSize();
     public abstract String getGenre();
 
+
+
     @Override
     public String getEntityType() {
         return "Game";

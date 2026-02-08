@@ -1,6 +1,7 @@
 package controller;
 
-import model.Player;
+import dto.player.PlayerRequestDto;
+import dto.player.PlayerResponseDto;
 import service.PlayerService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -11,33 +12,43 @@ import java.util.List;
 @RequestMapping("/api/players")
 public class PlayerController {
 
-    private final PlayerService playerService;
+    private final PlayerService service;
 
-    public PlayerController(PlayerService playerService) {
-        this.playerService = playerService;
+    public PlayerController(PlayerService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Player player) {
-        playerService.createPlayer(player);
+    public ResponseEntity<Void> create(@RequestBody PlayerRequestDto dto) {
+        service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Player>> getAll() {
-        return ResponseEntity.ok(playerService.getAllPlayers());
+    public ResponseEntity<List<PlayerResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Player> getById(@PathVariable int id) {
-        return playerService.getPlayerById(id)
+    public ResponseEntity<PlayerResponseDto> getById(@PathVariable int id) {
+        return service.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable int id,
+            @RequestBody PlayerRequestDto dto
+    ) {
+        return service.update(id, dto)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        playerService.deletePlayer(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

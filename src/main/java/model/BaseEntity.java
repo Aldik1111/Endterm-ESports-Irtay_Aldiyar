@@ -16,6 +16,7 @@ public abstract class BaseEntity {
         this.name = name;
     }
 
+
     public abstract String getEntityType();
     public abstract String getInfo();
 
@@ -37,4 +38,5 @@ public abstract class BaseEntity {
         }
         this.name = name;
     }
+
 }

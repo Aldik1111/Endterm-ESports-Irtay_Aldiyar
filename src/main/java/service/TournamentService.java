@@ -1,43 +1,43 @@
 package service;
 
 import model.Tournament;
-import repository.TournamentRepository;
-import repository.MatchRepository;
-import exception.ValidationException;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+@Service
 public class TournamentService {
 
-    private final TournamentRepository tournamentRepository = new TournamentRepository();
+    private final List<Tournament> tournaments = new ArrayList<>();
+    private int idCounter = 1;
 
-    public void createTournament(Tournament tournament) {
-        validateTournament(tournament);
-        tournamentRepository.save(tournament);
+    public void create(Tournament tournament) {
+        tournament.setId(idCounter++);
+        tournaments.add(tournament);
     }
 
-    public Optional<Tournament> getTournamentById(int id) {
-        return tournamentRepository.findById(id);
+    public List<Tournament> getAll() {
+        return tournaments;
     }
 
-    public List<Tournament> getAllTournaments() {
-        return tournamentRepository.findAll();
+    public Optional<Tournament> getById(int id) {
+        return tournaments.stream()
+                .filter(t -> t.getId() == id)
+                .findFirst();
     }
 
-    public void updateTournament(Tournament tournament) {
-        validateTournament(tournament);
-        tournamentRepository.save(tournament);
-    }
-
-    public void deleteTournament(int id) {
-        MatchRepository.deleteByTournamentId(id);
-        tournamentRepository.deleteById(id);
-    }
-
-    private void validateTournament(Tournament tournament) {
-        if (tournament.getName() == null || tournament.getName().isEmpty()) {
-            throw new ValidationException("Tournament name cannot be empty");
+    public boolean update(int id, Tournament updated) {
+        for (Tournament t : tournaments) {
+            if (t.getId() == id) {
+                t.setName(updated.getName());
+                t.setGameId(updated.getGameId());
+                return true;
+            }
         }
+        return false;
+    }
+
+    public void delete(int id) {
+        tournaments.removeIf(t -> t.getId() == id);
     }
 }
