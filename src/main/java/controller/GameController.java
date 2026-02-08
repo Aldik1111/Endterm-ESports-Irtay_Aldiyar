@@ -2,41 +2,42 @@ package controller;
 
 import model.Game;
 import service.GameService;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/games")
 public class GameController {
 
-    private final GameService gameService = new GameService();
+    private final GameService gameService;
 
-    public void create(Game game) {
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody Game game) {
         gameService.createGame(game);
-        System.out.println("Game created: " + game.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public void getAll() {
-        List<Game> games = gameService.getAllGames();
-        if (games.isEmpty()) {
-            System.out.println("No games found.");
-            return;
-        }
-        games.forEach(g -> System.out.println(g.getId() + " | " + g.getName() + " | Genre: " + g.getGenre()));
+    @GetMapping
+    public ResponseEntity<List<Game>> getAll() {
+        return ResponseEntity.ok(gameService.getAllGames());
     }
 
-    public void getById(int id) {
-        gameService.getGameById(id).ifPresentOrElse(
-                g -> System.out.println(g.getId() + " | " + g.getName() + " | Genre: " + g.getGenre()),
-                () -> System.out.println("Game not found.")
-        );
+    @GetMapping("/{id}")
+    public ResponseEntity<Game> getById(@PathVariable int id) {
+        return gameService.getGameById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    public void update(Game game) {
-        gameService.updateGame(game);
-        System.out.println("Game updated.");
-    }
-
-    public void delete(int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         gameService.deleteGame(id);
-        System.out.println("Game deleted.");
+        return ResponseEntity.noContent().build();
     }
 }

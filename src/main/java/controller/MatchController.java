@@ -2,41 +2,42 @@ package controller;
 
 import model.Match;
 import service.MatchService;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/matches")
 public class MatchController {
 
-    private final MatchService matchService = new MatchService();
+    private final MatchService matchService;
 
-    public void create(Match match) {
+    public MatchController(MatchService matchService) {
+        this.matchService = matchService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody Match match) {
         matchService.createMatch(match);
-        System.out.println("Match created: " + match.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public void getAll() {
-        List<Match> matches = matchService.getAllMatches();
-        if (matches.isEmpty()) {
-            System.out.println("No matches found.");
-            return;
-        }
-        matches.forEach(System.out::println);
+    @GetMapping
+    public ResponseEntity<List<Match>> getAll() {
+        return ResponseEntity.ok(matchService.getAllMatches());
     }
 
-    public void getById(int id) {
-        matchService.getMatchById(id).ifPresentOrElse(
-                System.out::println,
-                () -> System.out.println("Match not found.")
-        );
+    @GetMapping("/{id}")
+    public ResponseEntity<Match> getById(@PathVariable int id) {
+        return matchService.getMatchById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    public void update(Match match) {
-        matchService.updateMatch(match);
-        System.out.println("Match updated.");
-    }
-
-    public void delete(int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         matchService.deleteMatch(id);
-        System.out.println("Match deleted.");
+        return ResponseEntity.noContent().build();
     }
 }

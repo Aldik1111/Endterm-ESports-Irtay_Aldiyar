@@ -2,41 +2,42 @@ package controller;
 
 import model.Tournament;
 import service.TournamentService;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/tournaments")
 public class TournamentController {
 
-    private final TournamentService tournamentService = new TournamentService();
+    private final TournamentService tournamentService;
 
-    public void create(Tournament tournament) {
+    public TournamentController(TournamentService tournamentService) {
+        this.tournamentService = tournamentService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody Tournament tournament) {
         tournamentService.createTournament(tournament);
-        System.out.println("Tournament created: " + tournament.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public void getAll() {
-        List<Tournament> tournaments = tournamentService.getAllTournaments();
-        if (tournaments.isEmpty()) {
-            System.out.println("No tournaments found.");
-            return;
-        }
-        tournaments.forEach(t -> System.out.println(t.getId() + " | " + t.getName()));
+    @GetMapping
+    public ResponseEntity<List<Tournament>> getAll() {
+        return ResponseEntity.ok(tournamentService.getAllTournaments());
     }
 
-    public void getById(int id) {
-        tournamentService.getTournamentById(id).ifPresentOrElse(
-                t -> System.out.println(t.getId() + " | " + t.getName()),
-                () -> System.out.println("Tournament not found.")
-        );
+    @GetMapping("/{id}")
+    public ResponseEntity<Tournament> getById(@PathVariable int id) {
+        return tournamentService.getTournamentById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    public void update(Tournament tournament) {
-        tournamentService.updateTournament(tournament);
-        System.out.println("Tournament updated.");
-    }
-
-    public void delete(int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         tournamentService.deleteTournament(id);
-        System.out.println("Tournament deleted.");
+        return ResponseEntity.noContent().build();
     }
 }

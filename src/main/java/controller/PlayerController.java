@@ -1,58 +1,43 @@
 package controller;
 
-import exception.ValidationException;
 import model.Player;
 import service.PlayerService;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/players")
 public class PlayerController {
 
-    private final PlayerService playerService = new PlayerService();
+    private final PlayerService playerService;
 
-    public void create(Player player) {
-        try {
-            playerService.createPlayer(player);
-            System.out.println("Player created: " + player.getName());
-        } catch (ValidationException e) {
-            System.out.println("Failed to create player: " + e.getMessage());
-        }
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
-
-    public void getAll() {
-        List<Player> players = playerService.getAllPlayers();
-        if (players.isEmpty()) {
-            System.out.println("No players found.");
-            return;
-        }
-        players.forEach(System.out::println);
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody Player player) {
+        playerService.createPlayer(player);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public void getById(int id) {
-        playerService.getPlayerById(id).ifPresentOrElse(
-                System.out::println,
-                () -> System.out.println("Player not found.")
-        );
+    @GetMapping
+    public ResponseEntity<List<Player>> getAll() {
+        return ResponseEntity.ok(playerService.getAllPlayers());
     }
 
-    public void getByTeam(int teamId) {
-        List<Player> players = playerService.getByTeam(teamId);
-        if (players.isEmpty()) {
-            System.out.println("No players in team " + teamId);
-            return;
-        }
-        players.forEach(System.out::println);
+    @GetMapping("/{id}")
+    public ResponseEntity<Player> getById(@PathVariable int id) {
+        return playerService.getPlayerById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
-    public void update(Player player) {
-        playerService.updatePlayer(player);
-        System.out.println("Player updated.");
-    }
-
-    public void delete(int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         playerService.deletePlayer(id);
-        System.out.println("Player deleted.");
+        return ResponseEntity.noContent().build();
     }
 }
