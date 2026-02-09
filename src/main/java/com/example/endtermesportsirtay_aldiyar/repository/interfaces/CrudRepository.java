@@ -1,6 +1,4 @@
-package repository.interfaces;
-
-import model.BaseEntity;
+package com.example.endtermesportsirtay_aldiyar.repository.interfaces;
 
 import java.util.List;
 import java.util.Optional;

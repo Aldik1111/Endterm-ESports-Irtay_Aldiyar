@@ -1,7 +1,7 @@
-package repository.impl;
+package com.example.endtermesportsirtay_aldiyar.repository.impl;
 
-import model.BaseEntity;
-import repository.interfaces.CrudRepository;
+import com.example.endtermesportsirtay_aldiyar.model.BaseEntity;
+import com.example.endtermesportsirtay_aldiyar.repository.interfaces.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;

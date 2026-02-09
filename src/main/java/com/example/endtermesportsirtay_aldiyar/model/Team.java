@@ -1,7 +1,7 @@
-package model;
+package com.example.endtermesportsirtay_aldiyar.model;
 
-import model.interfaces.IRegisterable;
-import model.interfaces.IValidatable;
+import com.example.endtermesportsirtay_aldiyar.model.interfaces.IRegisterable;
+import com.example.endtermesportsirtay_aldiyar.model.interfaces.IValidatable;
 
 import java.util.ArrayList;
 import java.util.List;

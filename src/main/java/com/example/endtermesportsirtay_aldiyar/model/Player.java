@@ -1,5 +1,5 @@
-package model;
-import model.interfaces.IValidatable;
+package com.example.endtermesportsirtay_aldiyar.model;
+import com.example.endtermesportsirtay_aldiyar.model.interfaces.IValidatable;
 
 public class Player extends BaseEntity implements IValidatable<Player> {
     private String nickname;

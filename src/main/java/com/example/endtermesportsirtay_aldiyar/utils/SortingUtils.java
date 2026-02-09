@@ -1,6 +1,6 @@
-package utils;
+package com.example.endtermesportsirtay_aldiyar.utils;
 
-import model.BaseEntity;
+import com.example.endtermesportsirtay_aldiyar.model.BaseEntity;
 
 import java.util.Comparator;
 import java.util.List;

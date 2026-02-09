@@ -1,4 +1,4 @@
-package exception;
+package com.example.endtermesportsirtay_aldiyar.exception;
 
 public class NotFoundException extends ApplicationException {
 

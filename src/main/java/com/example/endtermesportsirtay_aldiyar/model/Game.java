@@ -1,4 +1,4 @@
-package model;
+package com.example.endtermesportsirtay_aldiyar.model;
 
 public abstract class Game extends BaseEntity {
 

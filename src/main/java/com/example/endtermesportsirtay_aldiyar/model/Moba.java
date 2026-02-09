@@ -1,4 +1,4 @@
-package model;
+package com.example.endtermesportsirtay_aldiyar.model;
 
 public class Moba extends Game {
 

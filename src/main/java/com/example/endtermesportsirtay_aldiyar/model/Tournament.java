@@ -1,4 +1,4 @@
-package model;
+package com.example.endtermesportsirtay_aldiyar.model;
 
 import java.util.ArrayList;
 import java.util.List;

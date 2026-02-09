@@ -1,4 +1,4 @@
-package model.interfaces;
+package com.example.endtermesportsirtay_aldiyar.model.interfaces;
 
 public interface IValidatable<T> {
 

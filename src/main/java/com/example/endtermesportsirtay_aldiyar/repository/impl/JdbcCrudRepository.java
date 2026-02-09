@@ -1,9 +1,9 @@
-package repository.impl;
+package com.example.endtermesportsirtay_aldiyar.repository.impl;
 
-import model.BaseEntity;
-import repository.interfaces.CrudRepository;
-import utils.DatabaseConnection;
-import exception.DatabaseException;
+import com.example.endtermesportsirtay_aldiyar.model.BaseEntity;
+import com.example.endtermesportsirtay_aldiyar.repository.interfaces.CrudRepository;
+import com.example.endtermesportsirtay_aldiyar.utils.DatabaseConnection;
+import com.example.endtermesportsirtay_aldiyar.exception.DatabaseException;
 
 import java.sql.*;
 import java.util.ArrayList;
