@@ -4,11 +4,15 @@ public class PlayerResponseDto {
     private int id;
     private String nickname;
     private int age;
+    private int rank;
+    private int teamId;
 
-    public PlayerResponseDto(int id, String nickname, int age) {
+    public PlayerResponseDto(int id, String nickname, int age, int rank, int teamId) {
         this.id = id;
         this.nickname = nickname;
         this.age = age;
+        this.rank = rank;
+        this.teamId = teamId;
     }
 
     public int getId() {
@@ -19,7 +23,9 @@ public class PlayerResponseDto {
         return nickname;
     }
 
-    public int getAge() {
-        return age;
-    }
+    public int getAge() { return age; }
+
+    public int getRank() { return rank; }
+
+    public int getTeamId() { return teamId; }
 }

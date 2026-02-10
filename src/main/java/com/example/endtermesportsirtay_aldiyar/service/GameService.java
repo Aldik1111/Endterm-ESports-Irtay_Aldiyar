@@ -4,6 +4,7 @@ import com.example.endtermesportsirtay_aldiyar.dto.game.GameRequestDto;
 import com.example.endtermesportsirtay_aldiyar.dto.game.GameResponseDto;
 import com.example.endtermesportsirtay_aldiyar.factory.GameFactory;
 import com.example.endtermesportsirtay_aldiyar.model.Game;
+import com.example.endtermesportsirtay_aldiyar.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
@@ -14,6 +15,12 @@ public class GameService {
 
     private final List<Game> games = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
+    private final GameRepository gameRepository;
+
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
+
     // CREATE
     public void create(GameRequestDto dto) {
         Game game = GameFactory.createGame(

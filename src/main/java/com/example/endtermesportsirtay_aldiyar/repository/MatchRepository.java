@@ -7,10 +7,13 @@ import com.example.endtermesportsirtay_aldiyar.model.Tournament;
 import com.example.endtermesportsirtay_aldiyar.repository.impl.JdbcCrudRepository;
 import com.example.endtermesportsirtay_aldiyar.utils.DatabaseConnection;
 
+import org.springframework.stereotype.Repository;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class MatchRepository extends JdbcCrudRepository<Match> {
 
     private final TeamRepository teamRepo = new TeamRepository();

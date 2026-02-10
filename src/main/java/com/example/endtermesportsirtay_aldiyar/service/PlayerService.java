@@ -2,6 +2,7 @@ package com.example.endtermesportsirtay_aldiyar.service;
 
 import com.example.endtermesportsirtay_aldiyar.dto.player.*;
 import com.example.endtermesportsirtay_aldiyar.model.Player;
+import com.example.endtermesportsirtay_aldiyar.repository.PlayerRepository;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
 import com.example.endtermesportsirtay_aldiyar.builder.PlayerBuilder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,12 @@ public class PlayerService {
 
     private final List<Player> players = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
+    private final PlayerRepository playerRepository;
+
+    public PlayerService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     // CREATE
     public void create(PlayerRequestDto dto) {
         Player player = new PlayerBuilder()
@@ -23,11 +30,6 @@ public class PlayerService {
             .setTeamId(dto.getTeamId())
             .build();
 
-        players.add(player);
-
-        player.setId(idGen.nextId());
-        player.setNickname(dto.getNickname());
-        player.setAge(dto.getAge());
         players.add(player);
     }
 
@@ -67,7 +69,9 @@ public class PlayerService {
         return new PlayerResponseDto(
                 player.getId(),
                 player.getName(),
-                player.getAge()
+                player.getAge(),
+                player.getRank(),
+                player.getTeamId()
         );
     }
 }

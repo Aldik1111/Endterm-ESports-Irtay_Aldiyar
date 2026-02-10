@@ -1,6 +1,7 @@
 package com.example.endtermesportsirtay_aldiyar.service;
 
 import com.example.endtermesportsirtay_aldiyar.model.Team;
+import com.example.endtermesportsirtay_aldiyar.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import com.example.endtermesportsirtay_aldiyar.dto.team.TeamRequestDto;
 import com.example.endtermesportsirtay_aldiyar.builder.TeamBuilder;
@@ -13,6 +14,11 @@ public class TeamService {
 
     private final List<Team> teams = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
+    private final TeamRepository teamRepository;
+
+    public TeamService(TeamRepository teamRepository){
+        this.teamRepository = teamRepository;
+    }
 
     public void create(TeamRequestDto dto) {
         Team team = new TeamBuilder()

@@ -3,6 +3,7 @@ package com.example.endtermesportsirtay_aldiyar.service;
 import com.example.endtermesportsirtay_aldiyar.builder.MatchBuilder;
 import com.example.endtermesportsirtay_aldiyar.dto.match.*;
 import com.example.endtermesportsirtay_aldiyar.model.Match;
+import com.example.endtermesportsirtay_aldiyar.repository.MatchRepository;
 import org.springframework.data.annotation.Id;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
 
@@ -14,6 +15,11 @@ public class MatchService {
 
     private final List<Match> matches = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
+    private final MatchRepository matchRepository;
+
+    public MatchService(MatchRepository matchRepository){
+        this.matchRepository = matchRepository;
+    }
     // CREATE
     public void create(MatchRequestDto dto) {
         if (dto.getTeamAId() == dto.getTeamBId()) {

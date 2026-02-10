@@ -3,8 +3,9 @@ package com.example.endtermesportsirtay_aldiyar.repository;
 import com.example.endtermesportsirtay_aldiyar.exception.DatabaseException;
 import com.example.endtermesportsirtay_aldiyar.model.Player;
 import com.example.endtermesportsirtay_aldiyar.repository.impl.JdbcCrudRepository;
-//
 import com.example.endtermesportsirtay_aldiyar.utils.DatabaseConnection;
+
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Repository
 public class PlayerRepository extends JdbcCrudRepository<Player> {
 
     @Override

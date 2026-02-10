@@ -5,10 +5,13 @@ import com.example.endtermesportsirtay_aldiyar.utils.DatabaseConnection;
 import com.example.endtermesportsirtay_aldiyar.model.Game;
 import com.example.endtermesportsirtay_aldiyar.repository.impl.JdbcCrudRepository;
 
+import org.springframework.stereotype.Repository;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class GameRepository extends JdbcCrudRepository<Game> {
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.endtermesportsirtay_aldiyar.service;
 
 import com.example.endtermesportsirtay_aldiyar.model.Tournament;
+import com.example.endtermesportsirtay_aldiyar.repository.TournamentRepository;
 import org.springframework.stereotype.Service;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
 
@@ -11,6 +12,11 @@ public class TournamentService {
 
     private final List<Tournament> tournaments = new ArrayList<>();
     private IdGenerator idGen = IdGenerator.getInstance();
+    private TournamentRepository tournamentRepository;
+
+    public TournamentService(TournamentRepository tournamentRepository) {
+        this.tournamentRepository = tournamentRepository;
+    }
 
     public void create(Tournament tournament) {
         tournament.setId(idGen.nextId());
