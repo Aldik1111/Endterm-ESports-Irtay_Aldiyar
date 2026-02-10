@@ -14,9 +14,9 @@ public class MatchResponseDto {
         this.id = id;
         this.teamAId = teamAId;
         this.teamBId = teamBId;
+        this.tournamentId = tournamentId;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
-        this.tournamentId = tournamentId;
     }
 
     public int getId() {

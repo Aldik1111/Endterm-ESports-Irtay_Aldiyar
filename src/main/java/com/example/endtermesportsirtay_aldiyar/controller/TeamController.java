@@ -1,6 +1,7 @@
 package com.example.endtermesportsirtay_aldiyar.controller;
 
 import com.example.endtermesportsirtay_aldiyar.dto.team.TeamRequestDto;
+import com.example.endtermesportsirtay_aldiyar.dto.team.TeamResponseDto;
 import com.example.endtermesportsirtay_aldiyar.model.Team;
 import com.example.endtermesportsirtay_aldiyar.service.TeamService;
 import org.springframework.http.*;
@@ -19,13 +20,13 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody TeamRequestDto dto) {
+    public ResponseEntity<TeamResponseDto> create(@RequestBody TeamRequestDto dto) {
         service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Team>> getAll() {
+    public ResponseEntity<List<TeamResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 

@@ -3,8 +3,6 @@ package com.example.endtermesportsirtay_aldiyar.service;
 import com.example.endtermesportsirtay_aldiyar.builder.MatchBuilder;
 import com.example.endtermesportsirtay_aldiyar.dto.match.*;
 import com.example.endtermesportsirtay_aldiyar.model.Match;
-import com.example.endtermesportsirtay_aldiyar.repository.MatchRepository;
-import org.springframework.data.annotation.Id;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
 
 import org.springframework.stereotype.Service;
@@ -15,13 +13,10 @@ public class MatchService {
 
     private final List<Match> matches = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
-    private final MatchRepository matchRepository;
 
-    public MatchService(MatchRepository matchRepository){
-        this.matchRepository = matchRepository;
-    }
     // CREATE
     public void create(MatchRequestDto dto) {
+
         if (dto.getTeamAId() == dto.getTeamBId()) {
             throw new IllegalArgumentException("Teams must be different");
         }
@@ -54,19 +49,22 @@ public class MatchService {
                 .map(this::toDto);
     }
 
-    // UPDATE (пересоздаём матч)
+    // UPDATE
     public boolean update(int id, MatchRequestDto dto) {
+        if (dto.getTeamAId() == dto.getTeamBId()) {
+            throw new IllegalArgumentException("Teams must be different");
+        }
         for (int i = 0; i < matches.size(); i++) {
             if (matches.get(i).getId() == id) {
 
-                Match updated = new Match(
-                        id,
-                        dto.getTeamAId(),
-                        dto.getTeamBId(),
-                        dto.getTournamentId(),
-                        dto.getScoreA(),
-                        dto.getScoreB()
-                );
+                Match updated = new MatchBuilder()
+                        .setId(id)
+                        .setTeamAId(dto.getTeamAId())
+                        .setTeamBId(dto.getTeamBId())
+                        .setTournamentId(dto.getTournamentId())
+                        .setScoreA(dto.getScoreA())
+                        .setScoreB(dto.getScoreB())
+                        .build();
 
                 matches.set(i, updated);
                 return true;
@@ -74,6 +72,7 @@ public class MatchService {
         }
         return false;
     }
+
 
     // DELETE
     public void delete(int id) {

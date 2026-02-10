@@ -5,9 +5,9 @@ public class PlayerBuilder {
 
     private int id;
     private String nickname;
-    private int teamId;
-    private int rank;
     private int age;
+    private int rank;
+    private int teamId;
 
     public PlayerBuilder setId(int id) {
         this.id = id;
@@ -35,7 +35,7 @@ public class PlayerBuilder {
     }
 
     public Player build() {
-        Player player = new Player(id, nickname, teamId, rank, age);
+        Player player = new Player(id, nickname, age, rank, teamId);
         return player;
     }
 }

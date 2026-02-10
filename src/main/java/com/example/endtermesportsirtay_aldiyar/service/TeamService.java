@@ -1,35 +1,41 @@
 package com.example.endtermesportsirtay_aldiyar.service;
 
+import com.example.endtermesportsirtay_aldiyar.model.Player;
 import com.example.endtermesportsirtay_aldiyar.model.Team;
 import com.example.endtermesportsirtay_aldiyar.repository.TeamRepository;
 import org.springframework.stereotype.Service;
-import com.example.endtermesportsirtay_aldiyar.dto.team.TeamRequestDto;
+import com.example.endtermesportsirtay_aldiyar.dto.team.*;
 import com.example.endtermesportsirtay_aldiyar.builder.TeamBuilder;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
 
     private final List<Team> teams = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
-    private final TeamRepository teamRepository;
+    private final TeamRepository repository;
 
     public TeamService(TeamRepository teamRepository){
-        this.teamRepository = teamRepository;
+        this.repository = teamRepository;
     }
 
     public void create(TeamRequestDto dto) {
         Team team = new TeamBuilder()
-            .setId(idGen.nextId())
-            .setName(dto.getName())
-            .build();
+                .setId(idGen.nextId())
+                .setName(dto.getName())
+                .build();
         teams.add(team);
     }
 
-    public List<Team> getAll() {
-        return teams;
+
+
+    public List<TeamResponseDto> getAll() {
+        return repository.findAll().stream()
+                .map(this::toResponseDto)
+                .toList();
     }
 
     public Optional<Team> getById(int id) {
@@ -50,5 +56,12 @@ public class TeamService {
 
     public void delete(int id) {
         teams.removeIf(t -> t.getId() == id);
+    }
+
+    private TeamResponseDto toResponseDto(Team team) {
+        return new TeamResponseDto(
+                team.getId(),
+                team.getName()
+        );
     }
 }

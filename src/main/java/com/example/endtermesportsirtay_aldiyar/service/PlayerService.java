@@ -14,11 +14,6 @@ public class PlayerService {
 
     private final List<Player> players = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
-    private final PlayerRepository playerRepository;
-
-    public PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
 
     // CREATE
     public void create(PlayerRequestDto dto) {
@@ -54,6 +49,8 @@ public class PlayerService {
             if (player.getId() == id) {
                 player.setNickname(dto.getNickname());
                 player.setAge(dto.getAge());
+                player.setRank(dto.getRank());
+                player.setTeamId(dto.getTeamId());
                 return true;
             }
         }

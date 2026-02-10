@@ -2,7 +2,6 @@ package com.example.endtermesportsirtay_aldiyar.model;
 
 public class Match extends BaseEntity {
 
-    private int id;
     private int teamAId;
     private int teamBId;
     private int scoreA;
@@ -23,6 +22,7 @@ public class Match extends BaseEntity {
         this.scoreA = (int) (Math.random() * 10);
         this.scoreB = (int) (Math.random() * 10);
     }
+
 
     public int getId() {
         return id;

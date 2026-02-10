@@ -5,58 +5,47 @@ import java.util.List;
 
 public class Tournament extends BaseEntity {
 
-    private final Game game;
-    private final List<Team> teams;
     private int gameId;
+    private List<Integer> teamIds; // Храним id команд
+    private String location;
 
-    public Tournament(int id, String name, Game game, int gameId) {
+    public Tournament(int id, String name, int gameId) {
         super(id, name);
-        this.game = game;
-        this.teams = new ArrayList<>();
         this.gameId = gameId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+        this.teamIds = new ArrayList<>();
     }
 
     public int getGameId() {
         return gameId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public List<Integer> getTeamIds() {
+        return teamIds;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void addTeam(int teamId) {
+        teamIds.add(teamId);
     }
 
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
+    public void removeTeam(int teamId) {
+        teamIds.remove(Integer.valueOf(teamId));
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Override
+    public String getInfo() {
+        return "Tournament: " + getId() + " | " + getName() + " | Teams: " + teamIds.size();
     }
 
     @Override
     public String getEntityType() {
         return "Tournament";
-    }
-
-    @Override
-    public String getInfo() {
-        return "Tournament: " + name +
-                " | Game: " + game.getName() +
-                " | Teams: " + teams.size();
-    }
-
-    public Game getGame() { return game; }
-    public List<Team> getTeams() { return teams; }
-
-
-    public void addTeam(Team team) {
-        teams.add(team);
     }
 }

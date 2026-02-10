@@ -1,7 +1,6 @@
 package com.example.endtermesportsirtay_aldiyar.service;
 
-import com.example.endtermesportsirtay_aldiyar.dto.game.GameRequestDto;
-import com.example.endtermesportsirtay_aldiyar.dto.game.GameResponseDto;
+import com.example.endtermesportsirtay_aldiyar.dto.game.*;
 import com.example.endtermesportsirtay_aldiyar.factory.GameFactory;
 import com.example.endtermesportsirtay_aldiyar.model.Game;
 import com.example.endtermesportsirtay_aldiyar.repository.GameRepository;
@@ -15,11 +14,6 @@ public class GameService {
 
     private final List<Game> games = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
-    private final GameRepository gameRepository;
-
-    public GameService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
 
     // CREATE
     public void create(GameRequestDto dto) {

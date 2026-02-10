@@ -1,8 +1,8 @@
 package com.example.endtermesportsirtay_aldiyar.controller;
 
-import com.example.endtermesportsirtay_aldiyar.model.Tournament;
+import com.example.endtermesportsirtay_aldiyar.dto.tournament.*;
 import com.example.endtermesportsirtay_aldiyar.service.TournamentService;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,29 +18,26 @@ public class TournamentController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Tournament tournament) {
-        service.create(tournament);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<TournamentResponseDto> create(@RequestBody TournamentRequestDto dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Tournament>> getAll() {
+    public ResponseEntity<List<TournamentResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tournament> getById(@PathVariable int id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TournamentResponseDto> getById(@PathVariable int id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id,
-                                       @RequestBody Tournament tournament) {
-        return service.update(id, tournament)
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<TournamentResponseDto> update(
+            @PathVariable int id,
+            @RequestBody TournamentRequestDto dto
+    ) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")

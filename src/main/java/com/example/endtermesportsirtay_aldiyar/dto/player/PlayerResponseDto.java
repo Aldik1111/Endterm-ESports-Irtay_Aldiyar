@@ -1,6 +1,7 @@
 package com.example.endtermesportsirtay_aldiyar.dto.player;
 
 public class PlayerResponseDto {
+
     private int id;
     private String nickname;
     private int age;
