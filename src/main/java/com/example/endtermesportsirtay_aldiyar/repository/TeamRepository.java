@@ -1,64 +1,30 @@
 package com.example.endtermesportsirtay_aldiyar.repository;
 
-import com.example.endtermesportsirtay_aldiyar.exception.DatabaseException;
-import com.example.endtermesportsirtay_aldiyar.utils.DatabaseConnection;
 import com.example.endtermesportsirtay_aldiyar.model.Team;
-import com.example.endtermesportsirtay_aldiyar.repository.impl.JdbcCrudRepository;
-
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.*;
 
 @Repository
-public class TeamRepository extends JdbcCrudRepository<Team> {
+public class TeamRepository {
 
-    @Override
-    protected String getTableName() {
-        return "teams";
+    private final List<Team> teams = new ArrayList<>();
+
+    public void save(Team team) {
+        teams.add(team);
     }
 
-    @Override
-    protected Team mapRowToEntity(ResultSet rs) throws SQLException {
-        return new Team(rs.getInt("id"), rs.getString("name"));
+    public List<Team> findAll() {
+        return new ArrayList<>(teams);
     }
 
-    @Override
-    protected void setInsertParams(PreparedStatement ps, Team entity) throws SQLException {
-        ps.setInt(1, entity.getId());
-        ps.setString(2, entity.getName());
+    public Optional<Team> findById(int id) {
+        return teams.stream()
+                .filter(t -> t.getId() == id)
+                .findFirst();
     }
 
-    @Override
-    protected void setUpdateParams(PreparedStatement ps, Team entity) throws SQLException {
-        ps.setString(1, entity.getName());
-        ps.setInt(2, entity.getId());
-    }
-
-    @Override
-    public void update(Team team) {
-        String sql = getUpdateSql();
-
-        try (var conn = DatabaseConnection.getConnection();
-             var ps = conn.prepareStatement(sql)) {
-
-            setUpdateParams(ps, team);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Failed to update team", e);
-        }
-    }
-
-    @Override
-    protected String getInsertSql() {
-        return "INSERT INTO teams (id, name) VALUES (?, ?)";
-    }
-
-
-    @Override
-    protected String getUpdateSql() {
-        return "UPDATE teams SET name = ? WHERE id = ?";
+    public void deleteById(int id) {
+        teams.removeIf(t -> t.getId() == id);
     }
 }

@@ -1,67 +1,42 @@
 package com.example.endtermesportsirtay_aldiyar.model;
 
-import com.example.endtermesportsirtay_aldiyar.model.interfaces.IRegisterable;
-import com.example.endtermesportsirtay_aldiyar.model.interfaces.IValidatable;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Team extends BaseEntity implements IRegisterable, IValidatable<Team> {
+public class Team extends BaseEntity {
 
-    private final List<Player> players;
-    private boolean registered = false;
+    private String country;
+    private List<Integer> playerIds;
 
-    public Team(int id, String name) {
+    public Team(int id, String name, String country) {
         super(id, name);
-        this.players = new ArrayList<>();
+        this.country = country;
+        this.playerIds = new ArrayList<>();
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public List<Integer> getPlayerIds() {
+        return playerIds;
+    }
+
+    public void addPlayer(int playerId) {
+        playerIds.add(playerId);
+    }
+
+    public void removePlayer(int playerId) {
+        playerIds.remove(Integer.valueOf(playerId));
+    }
+
+    @Override
+    public String getInfo() {
+        return "Team: " + getId() + " | " + getName() + " | Country: " + country;
     }
 
     @Override
     public String getEntityType() {
         return "Team";
     }
-
-    @Override
-    public String getInfo() {
-        return "Team: " + name + " | Players: " + players.size();
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void addPlayer(Player player) {
-        if (players.size() < 5) {
-            players.add(player);
-        } else {
-            System.out.println("Team is full!");
-        }
-    }
-
-    public int playerCount() {
-        return players.size();
-    }
-
-    @Override
-    public void register(boolean registered) {
-        this.registered = registered;
-    }
-
-    public boolean isRegistered() {
-        return registered;
-    }
-
-    @Override
-    public boolean isValid(Team team) {
-        return team != null &&
-                team.getName() != null &&
-                !team.getName().trim().isEmpty() &&
-                players.size() <= 5;
-    }
-
-    public int getId() { return id; }
-    public String getName() { return name; }
-
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
 }

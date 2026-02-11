@@ -1,10 +1,8 @@
 package com.example.endtermesportsirtay_aldiyar.controller;
 
-import com.example.endtermesportsirtay_aldiyar.dto.team.TeamRequestDto;
-import com.example.endtermesportsirtay_aldiyar.dto.team.TeamResponseDto;
-import com.example.endtermesportsirtay_aldiyar.model.Team;
+import com.example.endtermesportsirtay_aldiyar.dto.team.*;
 import com.example.endtermesportsirtay_aldiyar.service.TeamService;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +19,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<TeamResponseDto> create(@RequestBody TeamRequestDto dto) {
-        service.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
@@ -31,18 +28,16 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Team> getById(@PathVariable int id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TeamResponseDto> getById(@PathVariable int id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id,
-                                       @RequestBody Team team) {
-        return service.update(id, team)
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<TeamResponseDto> update(
+            @PathVariable int id,
+            @RequestBody TeamRequestDto dto
+    ) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")

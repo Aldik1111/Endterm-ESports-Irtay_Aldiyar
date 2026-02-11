@@ -1,12 +1,15 @@
 package com.example.endtermesportsirtay_aldiyar.dto.team;
 
 public class TeamRequestDto {
+
     private String name;
+    private String country;
 
-    public TeamRequestDto() {}
+    public String getName() {
+        return name;
+    }
 
-    public TeamRequestDto(String name) { this.name = name; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getCountry() {
+        return country;
+    }
 }
