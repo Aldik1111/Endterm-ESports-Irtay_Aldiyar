@@ -1,8 +1,6 @@
 package com.example.endtermesportsirtay_aldiyar.controller;
 
-import com.example.endtermesportsirtay_aldiyar.dto.match.MatchRequestDto;
-import com.example.endtermesportsirtay_aldiyar.dto.match.MatchResponseDto;
-import com.example.endtermesportsirtay_aldiyar.service.MatchService;
+import com.example.endtermesportsirtay_aldiyar.dto.match.*;import com.example.endtermesportsirtay_aldiyar.service.MatchService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +17,7 @@ public class MatchController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody MatchRequestDto dto) {
+        public ResponseEntity<Void> create(@RequestBody MatchRequestDto dto) {
         service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

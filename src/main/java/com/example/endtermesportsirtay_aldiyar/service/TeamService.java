@@ -5,6 +5,7 @@ import com.example.endtermesportsirtay_aldiyar.dto.team.*;
 import com.example.endtermesportsirtay_aldiyar.model.Team;
 import com.example.endtermesportsirtay_aldiyar.repository.TeamRepository;
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
+import com.example.endtermesportsirtay_aldiyar.cache.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public class TeamService {
 
     private final TeamRepository repository;
     private final IdGenerator idGen = IdGenerator.getInstance();
+
+    private final CacheManager cache = InMemoryCacheManager.getInstance();
+    private static final String TEAM_CACHE_KEY = "all_teams";
 
     public TeamService(TeamRepository repository) {
         this.repository = repository;
@@ -30,15 +34,29 @@ public class TeamService {
                 .build();
 
         repository.save(team);
+
+        cache.remove(TEAM_CACHE_KEY);
         return toResponseDto(team);
     }
 
     // READ ALL
     public List<TeamResponseDto> getAll() {
-        return repository.findAll()
+
+        if (cache.contains(TEAM_CACHE_KEY)) {
+            System.out.println("Returning teams from CACHE");
+            return (List<TeamResponseDto>) cache.get(TEAM_CACHE_KEY);
+        }
+
+        System.out.println("Fetching teams from REPOSITORY");
+
+        List<TeamResponseDto> teams = repository.findAll()
                 .stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
+
+        cache.put(TEAM_CACHE_KEY, teams);
+
+        return teams;
     }
 
     // READ BY ID
@@ -64,12 +82,15 @@ public class TeamService {
         repository.deleteById(id);
         repository.save(updated);
 
+        cache.remove(TEAM_CACHE_KEY);
+
         return toResponseDto(updated);
     }
 
     // DELETE
     public void delete(int id) {
         repository.deleteById(id);
+        cache.remove(TEAM_CACHE_KEY);
     }
 
     private TeamResponseDto toResponseDto(Team team) {

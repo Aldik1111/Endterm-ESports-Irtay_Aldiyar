@@ -1,196 +1,90 @@
-🎮 ESports Tournament Management System
+# Caching Layer Implementation
 
-A Spring Boot REST API for managing esports tournaments.
+## What Is Cached
 
-This project was developed as part of the Endterm Project and follows OOP principles, SOLID design, and Layered Architecture.
+In this project, the `getAll()` methods in the following service classes are cached:
 
-🚀 Features
+* `PlayerService`
+* `MatchService`
+* `GameService`
+* `TournamentService`
+* `TeamService`
 
-The system allows management of:
+Each service stores its `getAll()` result using a unique cache key
+(for example, `"all_players"`).
 
-🎮 Games
+---
 
-👥 Teams
+## How It Works
 
-🧑 Players
+### Example: `PlayerService`
 
-🏆 Tournaments
+### First Call
 
-⚔ Matches
+```
+List<PlayerResponseDto> result = players.stream()
+        .map(this::toResponseDto)
+        .toList();
 
-Supported operations:
+cache.put("all_players", result);
+return result;
+```
 
-✅ Create
+Data is retrieved from the internal `List<Player>` and stored in the cache.
 
-✅ Read (All / By ID)
+---
 
-✅ Update
+### Next Calls
 
-✅ Delete
-
-🏗 Project Architecture
-
-The application follows a layered architecture:
-
-controller   → REST API endpoints
-service      → business logic
-repository   → data access layer
-model        → domain entities
-dto          → data transfer objects
-builder      → Builder pattern implementation
-singleton    → ID generation
-exception    → global REST error handling
-
-🧠 Design Patterns Used
-
-🔹 Builder Pattern
-Used to construct domain objects (PlayerBuilder, TeamBuilder, MatchBuilder, TournamentBuilder).
-
-🔹 Singleton Pattern
-Used for centralized ID generation (IdGenerator).
-
-🔹 DTO Pattern
-Separates internal domain models from external API representation.
-
-🔹 Layered Architecture
-Controller → Service → Repository separation.
-
-🔹 Global Exception Handling
-Centralized REST error handling using @RestControllerAdvice.
-
-🗂 Main Entities
-
-🎮 Game
-
-* id
-* name
-* genre
-* teamSize 
-
-
-👥 Team
-
-* id
-* name
-* playerIds (list of player IDs)
-
-🧑 Player
-
-* id
-* nickname
-* age
-* rank
-* teamId
-
-🏆 Tournament
-
-* id
-* name
-* gameId
-* 
-⚔ Match
-
-* id
-* teamAId
-* teamBId
-* scoreA
-* scoreB
-* tournamentId
-
-🔄 API Endpoints
-
-**Players**
-* POST    /api/players
-* GET     /api/players
-* GET     /api/players/{id}
-* PUT     /api/players/{id}
-* DELETE  /api/players/{id}
-
-**Teams**
-* POST    /api/teams
-* GET     /api/teams
-* GET     /api/teams/{id}
-* PUT     /api/teams/{id}
-* DELETE  /api/teams/{id}
-
-**Tournaments**
-* POST    /api/tournaments
-* GET     /api/tournaments
-* GET     /api/tournaments/{id}
-* PUT     /api/tournaments/{id}
-* DELETE  /api/tournaments/{id}
-
-**Matches**
-* POST    /api/matches
-* GET     /api/matches
-* GET     /api/matches/{id}
-* PUT     /api/matches/{id}
-* DELETE  /api/matches/{id}
-
-🛠 Technologies Used
-
-* Java 21+
-* Spring Boot
-* REST API
-* Maven
-* Postman (for testing)
-
-▶ How to Run
-
-1. Clone the repository:
-3. git clone <repository-url>
-6. Open the project in IntelliJ IDEA.
-8. Run the main class: EndtermESportsIrtayAldiyarApplication
-13. Test endpoints using Postman: http://localhost:8080/api/...
-
-🧪 Example JSON Request (Create)
-Game:
-{
-"name": "CS2",
-"type": "FPS"
+```
+if (cache.contains("all_players")) {
+    return (List<PlayerResponseDto>) cache.get("all_players");
 }
+```
 
-Player:
-{
-"nickname": "bobo",
-"age":23,
-"rank":7,
-"team_id":2
-}
+The cached result is returned instead of processing the list again.
 
+---
 
-Matches:
-{
-"teamAId": 1,
-"teamBId": 2,
-"tournamentId": 4
-}
+## Cache Invalidation
 
-Tournaments:
-{
-"name": "Major Championship 2026",
-"gameId": 1
-}
+The cache is automatically cleared after:
 
-Teams:
-{
-"name": "NAVI",
-"country": "Ukraine"
-}
-x
+* `create()`
+* `update()`
+* `delete()`
 
+Example:
 
+```
+cache.remove("all_players");
+```
 
-**This project demonstrates:**
+This guarantees that `getAll()` always returns up-to-date data after modifications.
 
-Object-Oriented Programming principles
+---
 
-Clean code structure
+## Cache Structure
 
-Proper separation of concerns
+The cache is implemented in:
 
-RESTful API design
+```
+cache/
+ ├── CacheManager.java
+ └── InMemoryCacheManager.java
+```
 
-Use of design patterns
+Implementation details:
 
-Error handling best practices
+* Uses `ConcurrentHashMap<String, Object>`
+* Follows the Singleton pattern
+* Accessed via `InMemoryCacheManager.getInstance()`
+
+Only one cache instance exists in the entire application.
+
+---
+
+## Important
+
+* Cache logic is implemented only inside the Service layer.
+* The layered architecture remains unchanged.

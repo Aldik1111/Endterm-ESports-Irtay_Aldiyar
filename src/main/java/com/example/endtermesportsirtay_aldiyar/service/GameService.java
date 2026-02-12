@@ -1,9 +1,9 @@
 package com.example.endtermesportsirtay_aldiyar.service;
 
+import com.example.endtermesportsirtay_aldiyar.cache.*;
 import com.example.endtermesportsirtay_aldiyar.dto.game.*;
 import com.example.endtermesportsirtay_aldiyar.factory.GameFactory;
 import com.example.endtermesportsirtay_aldiyar.model.Game;
-import com.example.endtermesportsirtay_aldiyar.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
 import com.example.endtermesportsirtay_aldiyar.singleton.IdGenerator;
@@ -15,6 +15,9 @@ public class GameService {
     private final List<Game> games = new ArrayList<>();
     private final IdGenerator idGen = IdGenerator.getInstance();
 
+    private final CacheManager cache = InMemoryCacheManager.getInstance();
+    private static final String GAME_CACHE_KEY = "all_matches";
+
     // CREATE
     public void create(GameRequestDto dto) {
         Game game = GameFactory.createGame(
@@ -23,6 +26,8 @@ public class GameService {
                 dto.getType()
         );
         games.add(game);
+
+        cache.remove(GAME_CACHE_KEY);
     }
 
     // READ ALL
@@ -60,6 +65,7 @@ public class GameService {
                         dto.getType()
                 );
                 games.set(i, updated);
+                cache.remove(GAME_CACHE_KEY);
                 return true;
             }
         }
@@ -69,5 +75,6 @@ public class GameService {
     // DELETE
     public void delete(int id) {
         games.removeIf(g -> g.getId() == id);
+        cache.remove(GAME_CACHE_KEY);
     }
 }
